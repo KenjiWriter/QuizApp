@@ -14,4 +14,12 @@ class mainController extends Controller
             'quizzes' => $quizzes, 
         ]);
     }
+
+    public function Quiz($id)
+    {
+        $quiz = Quiz::where('id', $id)->get();
+        return view('quiz',[
+            'quiz' => $quiz[0]
+        ]);
+    }
 }

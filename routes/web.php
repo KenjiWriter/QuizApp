@@ -19,6 +19,7 @@ Route::get('/', function () {
 });
 
 Route::get('/', [mainController::class, 'Show'])->name('home');
+Route::get('/quiz/{id}', [mainController::class, 'Quiz'])->name('Quiz');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
