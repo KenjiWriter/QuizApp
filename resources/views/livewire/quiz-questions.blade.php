@@ -11,7 +11,8 @@
     @if ($finish == true)
         <h2 class="text-2xl">Results</h2>
         <span class="text-lime-500">Correct: {{ $correct_answers }}</span>
-        <span class="text-rose-700">Incorrect: {{ $incorrect_answers}}</span> <br>
+        <span class="text-rose-700">Incorrect: {{ $incorrect_answers}}</span>
+        <span class="text-cyan-700">({{ round(( $correct_answers/$quiz->number_of_questions)*100, 0) }}%)</span> <br> <br>
         <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{{ route('home') }}">Home</a> <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{{ route('Quiz', $quiz->id) }}">Again</a>
     @else
         <span class="text-3xl">{{ $question }}</span> <br>
