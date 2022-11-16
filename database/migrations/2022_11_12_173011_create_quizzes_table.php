@@ -19,8 +19,9 @@ return new class extends Migration
             $table->integer('category');
             $table->string('description');
             $table->integer('number_of_questions');
-            $table->integer('questions');
-            $table->integer('answers');
+            $table->integer('needed_to_success');
+            $table->text('questions');
+            $table->text('answers');
             $table->integer('successful');
             $table->integer('fails');
             $table->timestamps();

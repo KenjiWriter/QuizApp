@@ -1,7 +1,6 @@
 <div>
     @if ($message != '')
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <strong class="font-bold">Alert!</strong>
+        <div class="bg-orange-100 border border-orange-400 text-orange-700 px-4 py-3 rounded relative" role="alert">
             <span class="block sm:inline">{{ $message }}</span>
             <span wire:click="cancelAlert" class="absolute top-0 bottom-0 right-0 px-4 py-3">
             <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
@@ -47,7 +46,8 @@
         <h2 class="text-2xl">Results</h2>
         <span class="text-lime-500">Correct: {{ $correct_answers }}</span>
         <span class="text-rose-700">Incorrect: {{ $incorrect_answers}}</span>
-        <span class="text-cyan-700">({{ round(( $correct_answers/$quiz->number_of_questions)*100, 0) }}%)</span> <br> <br>
+        <span class="text-cyan-700">({{ round(( $correct_answers/$quiz->number_of_questions)*100, 0) }}%)</span> <br>
+        <span class="text-emerald-500">Your best score is <strong>{{ $PR }}</strong> correct answers (<strong>{{ round(( $PR/$quiz->number_of_questions)*100, 0) }}%</strong>)</span> <br> <br>
         <button wire:click.prevent="showResults" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Check your answers</button> 
         <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{{ route('home') }}">Home</a> <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{{ route('Quiz', $quiz->id) }}">Again</a>
     @else

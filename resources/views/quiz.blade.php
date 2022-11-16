@@ -12,7 +12,7 @@
                     <h1 class="text-2xl">{{ $quiz->name }}</h1>
                     <info> {{ $quiz->description }} </info>
                     <br> <br>
-                    @livewire('quiz-questions')
+                    @livewire('quiz-questions', ['quizId' => $quiz->id])
                     
                 </div>
             </div>
