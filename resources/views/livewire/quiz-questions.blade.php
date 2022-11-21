@@ -8,25 +8,18 @@
         </div>
     @endif
     @if ($results == true)
-        <span class="text-3xl">{{ $question }}</span> <br>
-        <number class="text-blue-800">{{ $current_result+1 }}/{{ $quiz->number_of_questions }}</number>
-        <br> <br>
+    <span class="text-3xl">{{ $Quizquestions[$current_question]["question"] }}</span> <br>
+    <number class="text-blue-800">{{ $current_result+1 }}/{{ $quiz->number_of_questions }}</number>
+    <br> <br>
+    @foreach ($Quizquestions[$current_result]['answers'] as $key => $answer)
         <div class="items-center mb-3">
-            <input disabled @if($user_answer == $answer1) checked @endif wire:model="user_answer" id="result1" type="radio" value="{{ $answer1 }}" name="result1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
-            <label for="answer1" class="ml-2 text-sm font-medium @if($correct_option != $answer1) text-red-500 @else text-green-500 @endif">{{ $answer1 }}</label>
+            @if ($user_answers[$current_result] == $answer)
+                Your answer:
+            @else
+            @endif
+            <label for="answer{{ $key }}" class="ml-2 text-sm font-medium @if($Quizquestions[$current_result]['answer'] == $answer) text-green-500 @else text-red-800 @endif">{{ $answer }}</label>
         </div>
-        <div class="items-center mb-3">
-            <input disabled  @if($user_answer == $answer2) checked @endif wire:model="user_answer" id="result2" type="radio" value="{{ $answer2 }}" name="result2" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
-            <label for="answer2" class="ml-2 text-sm font-medium @if($correct_option != $answer2) text-red-500 @else text-green-500 @endif">{{ $answer2 }}</label>
-        </div>
-        <div class="items-center mb-3">
-            <input disabled  @if($user_answer == $answer3) checked @endif wire:model="user_answer" id="result3" type="radio" value="{{ $answer3 }}" name="result3" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
-            <label for="answer3" class="ml-2 text-sm font-medium @if($correct_option != $answer3) text-red-500 @else text-green-500 @endif">{{ $answer3 }}</label>
-        </div>
-        <div class="items-center mb-5">
-            <input disabled  @if($user_answer == $answer4) checked @endif wire:model="user_answer" id="result4" type="radio" value="{{ $answer4 }}" name="result4" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
-            <label for="answer4" class="ml-2 text-sm font-medium @if($correct_option != $answer4) text-red-500 @else text-green-500 @endif">{{ $answer4 }}</label>
-        </div>
+    @endforeach
 
         <div class="inline-flex">
             @if ($current_result != 0)
@@ -51,25 +44,15 @@
         <button wire:click.prevent="showResults" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Check your answers</button> 
         <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{{ route('home') }}">Home</a> <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{{ route('Quiz', $quiz->id) }}">Again</a>
     @else
-        <span class="text-3xl">{{ $question }}</span> <br>
+        <span class="text-3xl">{{ $Quizquestions[$current_question]["question"] }}</span> <br>
         <number class="text-blue-800">{{ $current_question+1 }}/{{ $quiz->number_of_questions }}</number>
         <br> <br>
-        <div class="items-center mb-3">
-            <input @if($user_answer == $answer1) checked @endif wire:model="user_answer" id="answer1" type="radio" value="{{ $answer1 }}" name="answer" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
-            <label for="answer1" class="ml-2 text-sm font-medium text-gray-900">{{ $answer1 }}</label>
-        </div>
-        <div class="items-center mb-3">
-            <input @if($user_answer == $answer2) checked @endif wire:model="user_answer" id="answer2" type="radio" value="{{ $answer2 }}" name="answer" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
-            <label for="answer2" class="ml-2 text-sm font-medium text-gray-900">{{ $answer2 }}</label>
-        </div>
-        <div class="items-center mb-3">
-            <input @if($user_answer == $answer3) checked @endif wire:model="user_answer" id="answer3" type="radio" value="{{ $answer3 }}" name="answer" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
-            <label for="answer3" class="ml-2 text-sm font-medium text-gray-900">{{ $answer3 }}</label>
-        </div>
-        <div class="items-center mb-5">
-            <input @if($user_answer == $answer4) checked @endif wire:model="user_answer" id="answer4" type="radio" value="{{ $answer4 }}" name="answer" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
-            <label for="answer4" class="ml-2 text-sm font-medium text-gray-900">{{ $answer4 }}</label>
-        </div>
+        @foreach ($Quizquestions[$current_question]['answers'] as $key => $answer)
+            <div class="items-center mb-3">
+                <input @if($user_answer == $answer) checked @endif wire:model="user_answer" id="answer{{ $key }}" type="radio" value="{{ $answer }}" name="answer" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                <label for="answer{{ $key }}" class="ml-2 text-sm font-medium text-gray-900">{{ $answer }}</label>
+            </div>
+        @endforeach
 
         <div class="inline-flex">
             @if ($current_question != 0)
