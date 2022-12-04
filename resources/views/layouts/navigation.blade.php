@@ -15,6 +15,11 @@
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-nav-link>
+                    @auth
+                        <x-nav-link :href="route('create.quiz')" :active="request()->routeIs('create.quiz')">
+                            {{ __('Create new quiz') }}
+                        </x-nav-link>
+                    @endauth
                 </div>
             </div>
 
@@ -74,6 +79,13 @@
                 {{ __('home') }}
             </x-responsive-nav-link>
         </div>
+        @auth
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link :href="route('create.quiz')" :active="request()->routeIs('create.quiz')">
+                    {{ __('Create new quiz') }}
+                </x-responsive-nav-link>
+            </div>
+        @endauth
         @auth
             <!-- Responsive Settings Options -->
             <div class="pt-4 pb-1 border-t border-gray-200">
