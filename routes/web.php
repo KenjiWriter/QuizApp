@@ -21,6 +21,8 @@ Route::get('/', function () {
 Route::get('/', [mainController::class, 'Show'])->name('home');
 Route::get('/quiz/{id}', [mainController::class, 'Quiz'])->name('Quiz');
 
+Route::get('/create/quiz', [mainController::class, 'Create'])->middleware('auth')->name('create.quiz');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

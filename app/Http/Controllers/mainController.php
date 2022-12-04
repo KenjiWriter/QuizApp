@@ -15,11 +15,16 @@ class mainController extends Controller
         ]);
     }
 
+    public function Create()
+    {
+        return view('create.quiz');
+    }
+
     public function Quiz($id)
     {
-        $quiz = Quiz::where('id', $id)->get();
+        $quiz = Quiz::find($id);
         return view('quiz',[
-            'quiz' => $quiz[0]
+            'quiz' => $quiz
         ]);
     }
 }
