@@ -11,7 +11,7 @@ class Createquiz extends Component
         $title, $description,
         $currentQuestion = 0, $questions = [],
         $question, $answer1, $answer2, $answer3, $answer4, $correctAnswer,
-        $successfullyNeeded;
+        $successfullyNeeded, $timer, $time_per_question;
     
     public function cancelAlert()
     {
@@ -29,6 +29,16 @@ class Createquiz extends Component
     
             $quiz->name = $this->title;
             $quiz->description = $this->description;
+            if($this->timer == 1) {
+                if(!empty($this->time_per_question)) {
+                    $quiz->timer = 1;
+                    $quiz->timer_per_question = $this->time_per_question;
+                } else {
+                    $this->message = "Please choose the amount of time per question";
+                }
+            } else {
+                $quiz->timer = 0;
+            }
     
             $quiz->questions = json_encode($questions);
             $quiz->answers = json_encode($answers);
@@ -36,6 +46,8 @@ class Createquiz extends Component
             $quiz->needed_to_success = $this->successfullyNeeded;
             $quiz->save();
             return redirect()->route('home');
+        } else {
+            $this->message = "Please choose the amount of correct answers to successfully completed quiz";
         }
     }
 

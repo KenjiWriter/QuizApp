@@ -77,10 +77,10 @@
         <label for="correct_answer" class="block text-gray-700 text-sm font-bold mb-2">Correct question</label>
         <select wire:model="correctAnswer" id="correct_answer" class="m-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-28">
         <option>Select correct answer</option>        
-        <option value="1" @if($questions[$currectQuestion]['correctAns'] == $answer1) selected @endif>Answer 1</option>
-        <option value="2" @if($questions[$currectQuestion]['correctAns'] == $answer2) selected @endif>Answer 2</option>
-        <option value="3" @if($questions[$currectQuestion]['correctAns'] == $answer3) selected @endif>Answer 3</option>
-        <option value="4" @if($questions[$currectQuestion]['correctAns'] == $answer4) selected @endif>Answer 4</option>
+        <option value="1" @isset($questions[$currentQuestion]) @if($questions[$currentQuestion]['correctAns'] == $answer1) selected @endif @endisset>Answer 1</option>
+        <option value="2" @isset($questions[$currentQuestion]) @if($questions[$currentQuestion]['correctAns'] == $answer2) selected @endif @endisset>Answer 2</option>
+        <option value="3" @isset($questions[$currentQuestion]) @if($questions[$currentQuestion]['correctAns'] == $answer3) selected @endif @endisset>Answer 3</option>
+        <option value="4" @isset($questions[$currentQuestion]) @if($questions[$currentQuestion]['correctAns'] == $answer4) selected @endif @endisset>Answer 4</option>
         </select> <br>
 
         <button wire:click.prevent="next" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3">
@@ -95,12 +95,25 @@
         @elseif ($step === 3)
         <label for="successfully_needed" class="block text-gray-700 text-sm font-bold mb-2">Select amount of correct option to successfully completed</label>
         <select wire:model="successfullyNeeded" id="correct_answer" class="m-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-28">
-        <option>Select an option</option>        
+        <option selected>Select an option</option>        
         <option value="0">0 (no entry)</option>
         @foreach ($questions as $key => $question)
             <option value="{{ $key+1 }}">{{ $key+1 }} ({{ round((($key+1)/count($questions))*100, 0) }}%)</option>
         @endforeach    
         </select> <br>
+        <div class="items-center mb-4">
+            <input wire:model="timer" id="default-checkbox" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+            <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Timer</label>
+        </div>
+        @if($timer == 1)
+            <label for="time_per_question" class="block text-gray-700 text-sm font-bold mb-2">Select time per one question</label>
+            <select wire:model="time_per_question" id="correct_answer" class="m-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-28">
+            <option selected>Select an option</option>        
+            <option value="10">10 seconds</option>
+            <option value="30">30 seconds</option>
+            <option value="60">60 seconds</option>
+            </select> <br>
+        @endif
         <button wire:click.prevent="postQuiz" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3">
             Publish your quiz
         </button>

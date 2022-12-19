@@ -13,7 +13,7 @@
     <br> <br>
     @foreach ($Quizquestions[$current_result]['answers'] as $key => $answer)
         <div class="items-center mb-3">
-            @if ($user_answers[$current_result] == $answer)
+            @if ($user_answers[$current_result][0] == $answer)
                 Your answer:
             @else
             @endif
@@ -22,7 +22,7 @@
     @endforeach
 
         <div class="inline-flex">
-            @if ($current_result != 0)
+            @if ($current_result > 0)
                 <button wire:click.prevent="backResults" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
                     Prev
                 </button>        
@@ -40,10 +40,19 @@
         <span class="text-lime-500">Correct: {{ $correct_answers }}</span>
         <span class="text-rose-700">Incorrect: {{ $incorrect_answers}}</span>
         <span class="text-cyan-700">({{ round(( $correct_answers/$quiz->number_of_questions)*100, 0) }}%)</span> <br>
-        <span class="text-emerald-500">Your best score is <strong>{{ $PR }}</strong> correct answers (<strong>{{ round(( $PR/$quiz->number_of_questions)*100, 0) }}%</strong>)</span> <br> <br>
+        @if ($quiz->timer == 1)
+            <span class="text-orange-300">Points: {{ $points }}</span> <br>
+        @endif
+        <span class="text-emerald-500">Your best score is <strong>{{ $PR }}</strong> correct answers (<strong>{{ round(( $PR/$quiz->number_of_questions)*100, 0) }}%</strong>) @if($quiz->timer == 1) and {{ $PR_points}} points @endif</span> <br> <br>
         <button wire:click.prevent="showResults" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Check your answers</button> 
         <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{{ route('home') }}">Home</a> <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{{ route('Quiz', $quiz->id) }}">Again</a>
     @else
+        @if ($quiz->timer == true)
+            <div wire:poll.1s="time">
+                <span class="text-xl">TIME</span><br>
+                <progress class="bg-gray-200 h-5 mb-6" id="time" value="{{ $time }}" max="{{ $quiz->timer_per_question }}"> 32% </progress> <br>
+            </div>
+        @endif
         <span class="text-3xl">{{ $Quizquestions[$current_question]["question"] }}</span> <br>
         <number class="text-blue-800">{{ $current_question+1 }}/{{ $quiz->number_of_questions }}</number>
         <br> <br>
@@ -55,10 +64,12 @@
         @endforeach
 
         <div class="inline-flex">
-            @if ($current_question != 0)
-                <button wire:click.prevent="back" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
-                    Prev
-                </button>        
+            @if ($quiz->timer != 1)
+                @if ($current_question != 0)
+                    <button wire:click.prevent="back" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+                        Prev
+                    </button>        
+                @endif
             @endif
             <button wire:click.prevent="next" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
                 @if ($current_question+1 == $quiz->number_of_questions)
