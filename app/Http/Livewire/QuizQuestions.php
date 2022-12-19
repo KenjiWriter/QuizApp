@@ -14,12 +14,24 @@ class QuizQuestions extends Component
             $message = '',
             $finish = false, $results = false, $resultStatus = false,
             $correct_answers = 0, $incorrect_answers = 0, $correct_option,
-            $PR,
+            $PR, $PR_points, $time = -1, $points,
             $Quizquestions, $shuffel = false;
     
     public function cancelAlert()
     {
         $this->message = '';
+    }
+
+    public function time()
+    {
+        if($this->time > 0) {
+            $this->time -= 1;
+        } else {
+            $this->user_answers[$this->current_question] = ['NOTIME', 0];
+            unset($this->user_answer);
+            if($this->current_question != $this->quiz->number_of_questions) $this->current_question += 1;
+            $this->time = $this->quiz->timer_per_question;
+        }
     }
 
     public function showResults()
@@ -46,15 +58,23 @@ class QuizQuestions extends Component
     {
         if(!empty($this->user_answer)) {
             $this->cancelAlert();
-            if(isset($this->user_answers[$this->current_question])) {
-                $this->user_answers[$this->current_question] = $this->user_answer;
+            if($this->quiz->timer == 1) {
+                $time_left = round(($this->time/$this->quiz->timer_per_question)*100, 0);
             } else {
-                $this->user_answers[] = $this->user_answer;
+                $time_left = 0;
+            }
+            if(isset($this->user_answers[$this->current_question])) {
+                $this->user_answers[$this->current_question] = [$this->user_answer, $time_left];
+            } else {
+                $this->user_answers[] = [$this->user_answer, $time_left];
             }
             unset($this->user_answer);
             if($this->current_question != $this->quiz->number_of_questions) $this->current_question += 1;
+            if($this->quiz->timer == 1) {
+                $this->time = $this->quiz->timer_per_question;
+            }
             if(isset($this->user_answers[$this->current_question])) {
-                $this->user_answer = $this->user_answers[$this->current_question];
+                $this->user_answer = $this->user_answers[$this->current_question][0];
             }
         } else {
             $this->message = "You cannot skip this question";
@@ -65,7 +85,7 @@ class QuizQuestions extends Component
     {
         if($this->current_question > 0) {
             $this->current_question -= 1;
-            $this->user_answer = $this->user_answers[$this->current_question];
+            $this->user_answer = $this->user_answers[$this->current_question][0];
         } else {
             $this->message = "This is the first question";
         }
@@ -75,6 +95,9 @@ class QuizQuestions extends Component
     {
         $quiz = Quiz::find($this->quizId);
         $this->quiz = $quiz;
+        if($this->time == -1) {
+            $this->time = $quiz->timer_per_question;
+        }
         $questions = json_decode($quiz->questions, true);
         $answers = json_decode($quiz->answers, true);
         
@@ -92,6 +115,7 @@ class QuizQuestions extends Component
             $quizzes = json_decode($user->quizzes, true);
             if(isset($quizzes[$quiz->id])) {
                 $this->PR = $quizzes[$quiz->id][1];
+                $this->PR_points = $quizzes[$quiz->id][2];
             }
         }
 
@@ -100,8 +124,13 @@ class QuizQuestions extends Component
 
             if($this->resultStatus == false) {
                 foreach($this->user_answers as $key => $user_answer) {
-                    if($this->Quizquestions[$key]['answer'] == $user_answer) {
+                    if($this->Quizquestions[$key]['answer'] == $user_answer[0]) {
                         $this->correct_answers += 1;
+                        if($user_answer[1] > 90) {
+                            $this->points += 100;
+                        } else {
+                            $this->points += $user_answer[1];
+                        }
                     } else {
                         $this->incorrect_answers += 1;
                     }
@@ -116,10 +145,10 @@ class QuizQuestions extends Component
                     $user = User::find(Auth::id());
                     if($this->correct_answers >= $quiz->needed_to_success) {
                         $success = 1;
-                        $data = [$quiz->id => [$success, $this->correct_answers]];
+                        $data = [$quiz->id => [$success, $this->correct_answers, $this->points]];
                     } else {
                         $success = 0;
-                        $data = [$quiz->id => [$success, $this->correct_answers]];
+                        $data = [$quiz->id => [$success, $this->correct_answers, $this->points]];
                     }
                     $data = json_encode($data);
                     if(empty($user->quizzes)) {
@@ -130,10 +159,13 @@ class QuizQuestions extends Component
                             if($quizzes[$quiz->id][0] == 0) {
                                 if($this->correct_answers >= $quiz->needed_to_success) $quizzes[$quiz->id][0] = 1;
                             }
-                            // Check if user now have higher score then his last best attemp
+                            // Check if user now have higher score then in his last best attemp
                             if($quizzes[$quiz->id][1] < $this->correct_answers) $quizzes[$quiz->id][1] = $this->correct_answers;
+
+                            // Check if user now have more points then in his last best attemp
+                            if($quizzes[$quiz->id][2] < $this->points) $quizzes[$quiz->id][2] = $this->points;
                         } else {
-                            $quizzes[] = [$quiz->id => [$success, $this->correct_answers]];
+                            $quizzes[] = [$quiz->id => [$success, $this->correct_answers, $this->points]];
                         }
                         $user->quizzes = json_encode($quizzes);
                     }

@@ -14,10 +14,6 @@ use App\Http\Controllers\mainController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/', [mainController::class, 'Show'])->name('home');
 Route::get('/quiz/{id}', [mainController::class, 'Quiz'])->name('Quiz');
 

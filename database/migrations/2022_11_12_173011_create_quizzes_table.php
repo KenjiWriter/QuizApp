@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->integer('category');
             $table->string('description');
+            $table->boolean('timer')->default(0);
+            $table->integer('timer_per_question')->default(null);
             $table->integer('number_of_questions');
             $table->integer('needed_to_success');
             $table->text('questions');
