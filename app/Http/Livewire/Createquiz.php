@@ -18,6 +18,19 @@ class Createquiz extends Component
         $this->message = '';
     }
 
+    public function remove()
+    {
+        unset($this->questions[$this->currentQuestion]);
+        $this->questions = array_values($this->questions);
+        $this->question = '';
+        $this->answer1 = '';
+        $this->answer2 = '';
+        $this->answer3 = '';
+        $this->answer4 = '';
+        $this->correctAnswer = '';
+        $this->currentQuestion = count($this->questions);
+    }
+
     public function postQuiz()
     {
         if(!empty($this->successfullyNeeded)) {
@@ -72,7 +85,11 @@ class Createquiz extends Component
         $this->answer3 = $question['ans3'];
         $this->answer4 = $question['ans4'];
 
-        $this->correctAnswer = $question['correctAns'];
+        if($question['correctAns'] == $question['ans1']) $correct = 1;
+        if($question['correctAns'] == $question['ans2']) $correct = 2;
+        if($question['correctAns'] == $question['ans3']) $correct = 3;
+        if($question['correctAns'] == $question['ans4']) $correct = 4;
+        $this->correctAnswer = $correct;
     }
 
     public function prevStep()

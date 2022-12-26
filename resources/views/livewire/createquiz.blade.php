@@ -76,15 +76,24 @@
 
         <label for="correct_answer" class="block text-gray-700 text-sm font-bold mb-2">Correct question</label>
         <select wire:model="correctAnswer" id="correct_answer" class="m-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-28">
-        <option>Select correct answer</option>        
-        <option value="1" @isset($questions[$currentQuestion]) @if($questions[$currentQuestion]['correctAns'] == $answer1) selected @endif @endisset>Answer 1</option>
-        <option value="2" @isset($questions[$currentQuestion]) @if($questions[$currentQuestion]['correctAns'] == $answer2) selected @endif @endisset>Answer 2</option>
-        <option value="3" @isset($questions[$currentQuestion]) @if($questions[$currentQuestion]['correctAns'] == $answer3) selected @endif @endisset>Answer 3</option>
-        <option value="4" @isset($questions[$currentQuestion]) @if($questions[$currentQuestion]['correctAns'] == $answer4) selected @endif @endisset>Answer 4</option>
+        <option value="1">Answer 1</option>
+        <option value="2">Answer 2</option>
+        <option value="3">Answer 3</option>
+        <option value="4">Answer 4</option>
         </select> <br>
 
+
+        @if (isset($questions[$currentQuestion]))
+            <button wire:click.prevent="remove" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3">
+                Remove question
+            </button> <br>
+        @endif
         <button wire:click.prevent="next" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3">
-            New question
+            @if (isset($questions[$currentQuestion]))
+                Save question
+            @else
+                New question
+            @endif
         </button> <br>
         <button wire:click.prevent="prevStep" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3">
             Previous step
